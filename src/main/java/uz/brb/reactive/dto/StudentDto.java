@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class StudentDto {
-    private Long id;
+    private String id;
     @NotBlank(message = "fullName must not be null")
     private String fullName;
     @NotBlank(message = "email must not be null")

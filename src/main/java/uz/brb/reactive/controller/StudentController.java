@@ -10,7 +10,7 @@ import uz.brb.reactive.entity.Student;
 import uz.brb.reactive.service.StudentService;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/api/v1/students")
 @RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
@@ -21,7 +21,7 @@ public class StudentController {
     }
 
     @GetMapping("/get")
-    public Mono<Student> getById(@RequestParam("id") Long id) {
+    public Mono<Student> getById(@RequestParam("id") String id) {
         return studentService.get(id);
     }
 
@@ -32,12 +32,12 @@ public class StudentController {
     }
 
     @PutMapping("/update")
-    public Mono<Student> update(@RequestParam Long id, @RequestBody Student student) {
+    public Mono<Student> update(@RequestParam("id") String id, @RequestBody Student student) {
         return studentService.update(id, student);
     }
 
     @DeleteMapping("/delete")
-    public Mono<Void> delete(@RequestParam Long id) {
+    public Mono<Void> delete(@RequestParam("id") String id) {
         return studentService.delete(id);
     }
 
