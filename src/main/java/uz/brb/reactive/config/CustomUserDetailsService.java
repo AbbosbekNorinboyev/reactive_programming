@@ -11,7 +11,6 @@ import uz.brb.reactive.repository.AuthUserRepository;
 @Service // 🔴 Bu juda muhim!
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements ReactiveUserDetailsService {
-
     private final AuthUserRepository authUserRepository;
 
     @Override

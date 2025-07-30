@@ -11,7 +11,6 @@ import uz.brb.reactive.repository.AuthUserRepository;
 @Component
 @RequiredArgsConstructor
 public class CustomReactiveAuthenticationManager implements ReactiveAuthenticationManager {
-
     private final AuthUserRepository userRepository;
 
     @Override

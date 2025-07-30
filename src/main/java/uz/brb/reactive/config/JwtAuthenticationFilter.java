@@ -18,7 +18,6 @@ import uz.brb.reactive.util.JwtUtil;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements WebFilter {
-
     private final JwtUtil jwtUtil;
     private final AuthUserRepository userRepository;
 
