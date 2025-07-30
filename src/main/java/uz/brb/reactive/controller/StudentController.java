@@ -42,7 +42,7 @@ public class StudentController {
     }
 
     @GetMapping("/filter/age")
-    public Flux<Student> getByAge(@RequestParam int minAge) {
+    public Flux<Student> getByAge(@RequestParam("minAge") int minAge) {
         return studentService.getByAgeMoreThan(minAge);
     }
 }

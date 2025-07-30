@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 import uz.brb.reactive.entity.AuthUser;
 
-public interface AuthUserRepository extends ReactiveMongoRepository<AuthUser, Long> {
+public interface AuthUserRepository extends ReactiveMongoRepository<AuthUser, String> {
 
     Mono<AuthUser> findByUsername(String username);
 }

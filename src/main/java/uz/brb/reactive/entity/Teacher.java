@@ -12,11 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Student {
+public class Teacher {
     @Id
     private String id;
     private String fullName;
-    private String email;
     private Integer age;
-    private String teacherId;
 }

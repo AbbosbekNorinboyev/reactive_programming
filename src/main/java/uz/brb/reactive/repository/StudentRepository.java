@@ -4,6 +4,6 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
 import uz.brb.reactive.entity.Student;
 
-public interface StudentRepository extends ReactiveMongoRepository<Student, Long> {
+public interface StudentRepository extends ReactiveMongoRepository<Student, String> {
     Flux<Student> findByAgeGreaterThan(int age);
 }

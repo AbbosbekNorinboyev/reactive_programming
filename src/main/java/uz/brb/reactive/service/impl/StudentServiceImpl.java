@@ -25,7 +25,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Mono<Student> get(String studentId) {
-        return studentRepository.findById(Long.valueOf(studentId)).switchIfEmpty(
+        return studentRepository.findById(studentId).switchIfEmpty(
                 Mono.error(new ResourceNotFoundException("Student not found: " + studentId))
         );
     }
@@ -40,7 +40,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Mono<Student> update(String id, Student student) {
-        return studentRepository.findById(Long.valueOf(id))
+        return studentRepository.findById(id)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found: " + id)))
                 .flatMap(studentExisting -> {
                     studentExisting.setFullName(student.getFullName());
                     studentExisting.setEmail(student.getEmail());
@@ -51,7 +52,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Mono<Void> delete(String id) {
-        return studentRepository.deleteById(Long.valueOf(id));
+        return studentRepository.deleteById(id);
     }
 
     @Override
