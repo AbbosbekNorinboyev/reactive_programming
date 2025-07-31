@@ -34,23 +34,24 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Mono<Student> get(String studentId) {
-        return studentRepository.findById(studentId).switchIfEmpty(
-                Mono.error(new ResourceNotFoundException("Student not found: " + studentId))
-        );
+    public Mono<StudentDto> get(String studentId) {
+        return studentRepository.findById(studentId)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found: " + studentId)))
+                .map(studentMapper::toDto);
     }
 
     @Override
-    public Mono<List<Student>> getAll(Integer page, Integer size) {
+    public Mono<List<StudentDto>> getAll(Integer page, Integer size) {
         int skip = page * size;
         return studentRepository.findAll()
                 .skip(skip)
                 .take(size)
+                .map(studentMapper::toDto)
                 .collectList();
     }
 
     @Override
-    public Mono<Student> update(String id, Student student) {
+    public Mono<StudentDto> update(String id, Student student) {
         return studentRepository.findById(id)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found: " + id)))
                 .flatMap(studentExisting -> {
@@ -58,7 +59,8 @@ public class StudentServiceImpl implements StudentService {
                     studentExisting.setEmail(student.getEmail());
                     studentExisting.setAge(student.getAge());
                     return studentRepository.save(studentExisting);
-                });
+                })
+                .map(studentMapper::toDto);
     }
 
     @Override
@@ -69,9 +71,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Mono<List<Student>> getByAgeMoreThan(int age) {
+    public Mono<List<StudentDto>> getByAgeMoreThan(int age) {
         return studentRepository.findByAgeGreaterThan(age)
                 .switchIfEmpty(Flux.error(new ResourceNotFoundException("No students found older than age: " + age)))
+                .map(studentMapper::toDto)
                 .collectList();
     }
 }

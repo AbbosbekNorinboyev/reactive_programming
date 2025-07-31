@@ -3,7 +3,6 @@ package uz.brb.reactive.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import uz.brb.reactive.dto.StudentDto;
 import uz.brb.reactive.entity.Student;
@@ -23,18 +22,18 @@ public class StudentController {
     }
 
     @GetMapping("/get")
-    public Mono<Student> getById(@RequestParam("id") String id) {
+    public Mono<StudentDto> getById(@RequestParam("id") String id) {
         return studentService.get(id);
     }
 
     @GetMapping("/getAll")
-    public Mono<List<Student>> getAll(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                                      @RequestParam(value = "size", required = false, defaultValue = "20") Integer size) {
+    public Mono<List<StudentDto>> getAll(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                         @RequestParam(value = "size", required = false, defaultValue = "20") Integer size) {
         return studentService.getAll(page, size);
     }
 
     @PutMapping("/update")
-    public Mono<Student> update(@RequestParam("id") String id, @RequestBody Student student) {
+    public Mono<StudentDto> update(@RequestParam("id") String id, @RequestBody Student student) {
         return studentService.update(id, student);
     }
 
@@ -44,7 +43,7 @@ public class StudentController {
     }
 
     @GetMapping("/filter/age")
-    public Mono<List<Student>> getByAge(@RequestParam("minAge") int minAge) {
+    public Mono<List<StudentDto>> getByAge(@RequestParam("minAge") int minAge) {
         return studentService.getByAgeMoreThan(minAge);
     }
 }

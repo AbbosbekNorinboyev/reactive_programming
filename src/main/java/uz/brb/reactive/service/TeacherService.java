@@ -10,13 +10,13 @@ import java.util.List;
 public interface TeacherService {
     Mono<Teacher> create(TeacherDto teacherDto);
 
-    Mono<Teacher> get(String teacherId);
+    Mono<TeacherDto> get(String teacherId);
 
-    Mono<List<Teacher>> getAll(Integer page, Integer size);
+    Mono<List<TeacherDto>> getAll(Integer page, Integer size);
 
-    Mono<Teacher> update(String teacherId, TeacherDto teacherDto);
+    Mono<TeacherDto> update(String teacherId, TeacherDto teacherDto);
 
     Mono<Void> delete(String teacherId);
 
-    Mono<List<Teacher>> getByAgeMoreThan(int age);
+    Mono<List<TeacherDto>> getByAgeMoreThan(int age);
 }

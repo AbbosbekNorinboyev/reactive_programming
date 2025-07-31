@@ -27,29 +27,32 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Mono<Teacher> get(String teacherId) {
+    public Mono<TeacherDto> get(String teacherId) {
         return teacherRepository.findById(teacherId)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Teacher not found: " + teacherId)));
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Teacher not found: " + teacherId)))
+                .map(teacherMapper::toDto);
     }
 
     @Override
-    public Mono<List<Teacher>> getAll(Integer page, Integer size) {
+    public Mono<List<TeacherDto>> getAll(Integer page, Integer size) {
         int skip = page * size;
         return teacherRepository.findAll()
                 .skip(skip)
                 .take(size)
+                .map(teacherMapper::toDto)
                 .collectList();
     }
 
     @Override
-    public Mono<Teacher> update(String teacherId, TeacherDto teacherDto) {
+    public Mono<TeacherDto> update(String teacherId, TeacherDto teacherDto) {
         return teacherRepository.findById(teacherId)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Teacher not found: " + teacherId)))
                 .flatMap(teacherExisting -> {
                     teacherExisting.setFullName(teacherDto.getFullName());
                     teacherExisting.setAge(teacherDto.getAge());
                     return teacherRepository.save(teacherExisting);
-                });
+                })
+                .map(teacherMapper::toDto);
     }
 
     @Override
@@ -60,9 +63,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Mono<List<Teacher>> getByAgeMoreThan(int age) {
+    public Mono<List<TeacherDto>> getByAgeMoreThan(int age) {
         return teacherRepository.findByAgeGreaterThan(age)
                 .switchIfEmpty(Flux.error(new ResourceNotFoundException("No teachers found older than age: " + age)))
+                .map(teacherMapper::toDto)
                 .collectList();
     }
 }
