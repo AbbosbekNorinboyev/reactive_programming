@@ -9,6 +9,8 @@ import uz.brb.reactive.dto.StudentDto;
 import uz.brb.reactive.entity.Student;
 import uz.brb.reactive.service.StudentService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/students")
 @RequiredArgsConstructor
@@ -26,8 +28,8 @@ public class StudentController {
     }
 
     @GetMapping("/getAll")
-    public Flux<Student> getAll(@RequestParam("page") Integer page,
-                                @RequestParam("size") Integer size) {
+    public Mono<List<Student>> getAll(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", required = false, defaultValue = "20") Integer size) {
         return studentService.getAll(page, size);
     }
 
@@ -42,7 +44,7 @@ public class StudentController {
     }
 
     @GetMapping("/filter/age")
-    public Flux<Student> getByAge(@RequestParam("minAge") int minAge) {
+    public Mono<List<Student>> getByAge(@RequestParam("minAge") int minAge) {
         return studentService.getByAgeMoreThan(minAge);
     }
 }

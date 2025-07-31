@@ -9,18 +9,28 @@ import uz.brb.reactive.entity.Student;
 import uz.brb.reactive.exception.ResourceNotFoundException;
 import uz.brb.reactive.mapper.StudentMapper;
 import uz.brb.reactive.repository.StudentRepository;
+import uz.brb.reactive.repository.TeacherRepository;
 import uz.brb.reactive.service.StudentService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final TeacherRepository teacherRepository;
 
     @Override
     public Mono<Student> create(StudentDto studentDto) {
-        Student student = studentMapper.toEntity(studentDto);
-        return studentRepository.save(student);
+        return teacherRepository.findById(studentDto.getTeacherId())
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Teacher not found: " + studentDto.getTeacherId())))
+                .map(teacher -> {
+                    Student studentFound = studentMapper.toEntity(studentDto);
+                    studentFound.setTeacherId(teacher.getId());
+                    return studentFound;
+                })
+                .flatMap(studentRepository::save);
     }
 
     @Override
@@ -31,11 +41,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Flux<Student> getAll(Integer page, Integer size) {
+    public Mono<List<Student>> getAll(Integer page, Integer size) {
         int skip = page * size;
         return studentRepository.findAll()
                 .skip(skip)
-                .take(size);
+                .take(size)
+                .collectList();
     }
 
     @Override
@@ -52,11 +63,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Mono<Void> delete(String id) {
-        return studentRepository.deleteById(id);
+        return studentRepository.findById(id)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found: " + id)))
+                .flatMap(studentRepository::delete);
     }
 
     @Override
-    public Flux<Student> getByAgeMoreThan(int age) {
-        return studentRepository.findByAgeGreaterThan(age);
+    public Mono<List<Student>> getByAgeMoreThan(int age) {
+        return studentRepository.findByAgeGreaterThan(age)
+                .switchIfEmpty(Flux.error(new ResourceNotFoundException("No students found older than age: " + age)))
+                .collectList();
     }
 }

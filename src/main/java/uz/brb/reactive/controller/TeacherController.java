@@ -8,6 +8,8 @@ import uz.brb.reactive.dto.TeacherDto;
 import uz.brb.reactive.entity.Teacher;
 import uz.brb.reactive.service.TeacherService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/teachers")
 @RequiredArgsConstructor
@@ -25,8 +27,8 @@ public class TeacherController {
     }
 
     @GetMapping("/getAll")
-    public Flux<Teacher> getAll(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                                @RequestParam(value = "size", required = false, defaultValue = "20") Integer size) {
+    public Mono<List<Teacher>> getAll(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(value = "size", required = false, defaultValue = "20") Integer size) {
         return teacherService.getAll(page, size);
     }
 
@@ -42,7 +44,7 @@ public class TeacherController {
     }
 
     @GetMapping("/filter/age")
-    public Flux<Teacher> getByAgeMoreThan(@RequestParam("age") int age) {
+    public Mono<List<Teacher>> getByAgeMoreThan(@RequestParam("age") int age) {
         return teacherService.getByAgeMoreThan(age);
     }
 }

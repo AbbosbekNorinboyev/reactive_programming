@@ -5,16 +5,18 @@ import reactor.core.publisher.Mono;
 import uz.brb.reactive.dto.TeacherDto;
 import uz.brb.reactive.entity.Teacher;
 
+import java.util.List;
+
 public interface TeacherService {
     Mono<Teacher> create(TeacherDto teacherDto);
 
     Mono<Teacher> get(String teacherId);
 
-    Flux<Teacher> getAll(Integer page, Integer size);
+    Mono<List<Teacher>> getAll(Integer page, Integer size);
 
     Mono<Teacher> update(String teacherId, TeacherDto teacherDto);
 
     Mono<Void> delete(String teacherId);
 
-    Flux<Teacher> getByAgeMoreThan(int age);
+    Mono<List<Teacher>> getByAgeMoreThan(int age);
 }

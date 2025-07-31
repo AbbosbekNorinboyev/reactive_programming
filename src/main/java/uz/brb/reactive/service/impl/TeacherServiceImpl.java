@@ -11,6 +11,8 @@ import uz.brb.reactive.mapper.TeacherMapper;
 import uz.brb.reactive.repository.TeacherRepository;
 import uz.brb.reactive.service.TeacherService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
@@ -19,8 +21,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Mono<Teacher> create(TeacherDto teacherDto) {
-        Teacher teacher = teacherMapper.toEntity(teacherDto);
-        return teacherRepository.save(teacher);
+        return Mono.just(teacherDto)
+                .map(teacherMapper::toEntity)
+                .flatMap(teacherRepository::save);
     }
 
     @Override
@@ -30,11 +33,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Flux<Teacher> getAll(Integer page, Integer size) {
+    public Mono<List<Teacher>> getAll(Integer page, Integer size) {
         int skip = page * size;
         return teacherRepository.findAll()
                 .skip(skip)
-                .take(size);
+                .take(size)
+                .collectList();
     }
 
     @Override
@@ -50,11 +54,15 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Mono<Void> delete(String teacherId) {
-        return teacherRepository.deleteById(teacherId);
+        return teacherRepository.findById(teacherId)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Teacher not found: " + teacherId)))
+                .flatMap(teacherRepository::delete);
     }
 
     @Override
-    public Flux<Teacher> getByAgeMoreThan(int age) {
-        return teacherRepository.findByAgeGreaterThan(age);
+    public Mono<List<Teacher>> getByAgeMoreThan(int age) {
+        return teacherRepository.findByAgeGreaterThan(age)
+                .switchIfEmpty(Flux.error(new ResourceNotFoundException("No teachers found older than age: " + age)))
+                .collectList();
     }
 }

@@ -23,6 +23,7 @@ public class StudentMapper {
                 .fullName(student.getFullName())
                 .email(student.getEmail())
                 .age(student.getAge())
+                .teacherId(student.getTeacherId())
                 .build();
     }
 

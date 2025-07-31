@@ -19,4 +19,6 @@ public class StudentDto {
     private String email;
     @Min(value = 1, message = "Age must be at least 1")
     private Integer age;
+    @NotBlank(message = "teacherId must not be null")
+    private String teacherId;
 }
